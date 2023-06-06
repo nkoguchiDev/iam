@@ -18,3 +18,10 @@ class TestProject:
         assert isinstance(projects, List)
         assert isinstance(projects[0], data.Project)
         assert created_project in projects
+
+    def test_delete_data_result(self):
+        pj_name = "my_project"
+        created_project = crud.project.create(name=pj_name)
+        project = crud.project.delete(uuid=created_project.uuid)
+        assert isinstance(project, data.Project)
+        assert created_project == project
