@@ -6,16 +6,16 @@ entity Project {
   --
   * name: str
   --
-  * Resources: List[ResourceSubset]
+  * services: List[ServiceSubset]
 }
 
-entity ResourceSubset {
+entity ServiceSubset {
   * uuid: UUID <<unique>>
   --
   * name: str
 }
 
-entity Resource.Service {
+entity Service {
   * uuid: UUID <<unique>>
   --
   * name: str
@@ -27,8 +27,10 @@ entity Api {
   * name: str
 }
 
-entity Resource.IAM {
-  * uuid: Project.UUID/iam
+entity IAM {
+  * uuid: UUID <<unique>>
+  --
+  * name: str = "iam"
   --
   * users: List[User.UUID]
   --
@@ -43,12 +45,17 @@ entity Role {
   * name: str
 }
 
-entity Policy {
+entity Permission {
   * uuid: UUID <<unique>>
   --
   * name: str
+  example: service.resource.method
   --
-  * target: Resource
+  * serviceId: Service.UUID
+  --
+  * resourceId: Resource.UUID
+  --
+  * method: str
 }
 
 entity Group {
@@ -63,14 +70,14 @@ entity User {
   * name: str
 }
 
-Project ||--|{ Resource
-Project ||-left-|{ ResourceSubset
+Project ||--|{ Service
+Project ||--|| IAM
 
 Service ||--|{ Api
 
 IAM ||--|{ Role
 IAM ||--o{ Group
 IAM ||--|{ User
-Role }|--|{ Policy
+Role }|--|{ Permission
 
 @enduml
