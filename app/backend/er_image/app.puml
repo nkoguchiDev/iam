@@ -1,0 +1,76 @@
+@startuml
+skinparam linetype ortho
+
+entity Project {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+  --
+  * Resources: List[ResourceSubset]
+}
+
+entity ResourceSubset {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+entity Resource.Service {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+entity Api {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+entity Resource.IAM {
+  * uuid: Project.UUID/iam
+  --
+  * users: List[User.UUID]
+  --
+  * groups: List[Group.UUID]
+  --
+  * groups: List[Role.UUID]
+}
+
+entity Role {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+entity Policy {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+  --
+  * target: Resource
+}
+
+entity Group {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+entity User {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+}
+
+Project ||--|{ Resource
+Project ||-left-|{ ResourceSubset
+
+Service ||--|{ Api
+
+IAM ||--|{ Role
+IAM ||--o{ Group
+IAM ||--|{ User
+Role }|--|{ Policy
+
+@enduml
