@@ -5,32 +5,44 @@ entity Project {
   * uuid: UUID <<unique>>
   --
   * name: str
-  --
-  * services: List[ServiceSubset]
-}
-
-entity ServiceSubset {
-  * uuid: UUID <<unique>>
-  --
-  * name: str
 }
 
 entity Service {
   * uuid: UUID <<unique>>
   --
   * name: str
+  --
+  * project: Project
 }
 
 entity Api {
   * uuid: UUID <<unique>>
   --
   * name: str
+  --
+  * type: str
+  --
+  * service: Service
+  --
+  * basePath: str
+  --
+  * backend: Backend
+}
+
+entity Backend {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+  --
+  * service: Service
 }
 
 entity IAM {
   * uuid: UUID <<unique>>
   --
   * name: str = "iam"
+  --
+  * project: Project
   --
   * users: List[User.UUID]
   --
@@ -74,10 +86,15 @@ Project ||--|{ Service
 Project ||--|| IAM
 
 Service ||--|{ Api
+Service ||--|{ Backend
+Api ||--|{ Backend
 
 IAM ||--|{ Role
 IAM ||--o{ Group
 IAM ||--|{ User
 Role }|--|{ Permission
+Role }|--|{ Group
+Role }|--|{ User
+Group }|--|{ User
 
 @enduml
