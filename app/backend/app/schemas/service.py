@@ -7,5 +7,5 @@ class ProjectBase(BaseModel):
     name: Optional[str] = None
 
 
-class CreateProject(ProjectBase):
+class CreateService(ProjectBase):
     name: str

@@ -1,5 +1,3 @@
-from typing import List
-
 from app import crud, models, schemas
 
 pj_name = "my_project"
@@ -16,7 +14,7 @@ class TestProject:
     def test_create_data_result(self):
         created_project = crud.project.create(create_schema)
         project = crud.project.get(uuid=created_project.uuid)
-        assert created_project in project
+        assert created_project == project
 
     def test_delete_data_result(self):
         created_project = crud.project.create(create_schema)
@@ -24,3 +22,13 @@ class TestProject:
         project = crud.project.get(uuid=created_project.uuid)
         assert project is None
         assert created_project == deleted_project
+
+    def test_return_instance(self):
+        create_ = crud.project.create(create_schema)
+        get_ = crud.project.get(create_.uuid)
+        list_ = crud.project.get_list()
+        delete_ = crud.project.delete(create_.uuid)
+        assert isinstance(create_, models.Project)
+        assert isinstance(get_, models.Project)
+        assert isinstance(list_[0], models.Project)
+        assert isinstance(delete_, models.Project)

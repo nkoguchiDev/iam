@@ -1,37 +1,27 @@
 from typing import List, Optional
 
-from app import data, model
+from app import models, schemas
 
 
-def create_uuid():
-    from uuid import uuid4
+class Service:
+    def get_list(self, project: models.Project) -> List[models.Service]:
+        return models.Service.objects(project=project)
 
-    return str(uuid4())
+    def get(self, project: models.Project, uuid: str) -> Optional[models.Service]:
+        data = models.Service.objects(project=project, uuid=uuid).first()
+        if data:
+            return data
 
+    def create(
+        self, project: models.Project, obj_in: schemas.CreateService
+    ) -> models.Service:
+        return models.Service(project=project, **obj_in.dict()).save()
 
-class Project:
-    def get(self) -> List[data.Project]:
-        projects = model.Project.objects()
-        return [
-            data.Project(uuid=project.uuid, name=project.name) for project in projects
-        ]
-
-    def get_by_uuid(self, uuid: str) -> Optional[data.Project]:
-        project = model.Project.objects(uuid=uuid).first()
-        if project:
-            return data.Project(uuid=project.uuid, name=project.name)
-
-    def create(self, name: str) -> data.Project:
-        uuid = create_uuid()
-        project = model.Project(uuid=uuid, name=name)
-        project.save()
-        return data.Project(uuid=project.uuid, name=project.name)
-
-    def delete(self, uuid: str) -> Optional[data.Project]:
-        project = model.Project.objects(uuid=uuid).first()
-        project.delete()
-        if project:
-            return data.Project(uuid=project.uuid, name=project.name)
+    def delete(self, project: models.Project, uuid: str) -> Optional[models.Service]:
+        data = models.Service.objects(project=project, uuid=uuid).first()
+        data.delete()
+        if data:
+            return data
 
 
-project = Project()
+service = Service()
