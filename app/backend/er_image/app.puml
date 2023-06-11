@@ -7,6 +7,12 @@ entity Project {
   * name: str
 }
 
+entity Operation {
+  * uuid: UUID <<unique>>
+  --
+  * complated: bool
+}
+
 entity Service {
   * uuid: UUID <<unique>>
   --
@@ -20,7 +26,7 @@ entity Api {
   --
   * name: str
   --
-  * type: str
+  * plan: str
   --
   * service: Service
   --
@@ -35,6 +41,16 @@ entity Backend {
   * name: str
   --
   * service: Service
+  --
+  * isPrivate: bool
+}
+
+entity Product {
+  * uuid: UUID <<unique>>
+  --
+  * name: str
+  --
+  * apis: List[API]
 }
 
 entity IAM {
@@ -84,9 +100,13 @@ entity User {
 
 Project ||--|{ Service
 Project ||--|| IAM
+Project ||--|| Operation
 
 Service ||--|{ Api
 Service ||--|{ Backend
+Service ||--|{ Product
+
+Product }|--|{ Api
 Api ||--|{ Backend
 
 IAM ||--|{ Role

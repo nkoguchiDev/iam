@@ -1,9 +1,12 @@
-from mongoengine.fields import ReferenceField
+from mongoengine import Document
+from mongoengine.fields import StringField, ReferenceField
 
-from app.models import BaseDocument, Project
+from app.models import Project
 
 
-class Service(BaseDocument):
+class Service(Document):
+    uuid = StringField(unique=True, required=True)
+    name = StringField(required=True)
     project = ReferenceField(Project)
     meta = {
         "db_alias": "dummydb",

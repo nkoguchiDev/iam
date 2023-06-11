@@ -1,6 +1,7 @@
 from typing import List, Optional
 
-from app import models, schemas
+from app import models
+from app.utils.generator import create_uuid
 
 
 class Service:
@@ -12,10 +13,9 @@ class Service:
         if data:
             return data
 
-    def create(
-        self, project: models.Project, obj_in: schemas.CreateService
-    ) -> models.Service:
-        return models.Service(project=project, **obj_in.dict()).save()
+    def create(self, project: models.Project, name: str) -> models.Service:
+        uuid_ = create_uuid()
+        return models.Service(project=project, uuid=uuid_, name=name).save()
 
     def delete(self, project: models.Project, uuid: str) -> Optional[models.Service]:
         data = models.Service.objects(project=project, uuid=uuid).first()
